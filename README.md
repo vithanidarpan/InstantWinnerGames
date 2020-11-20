@@ -1,7 +1,23 @@
-# GiftsWinner
-go get .. whatever needed
+# Big Picture
+Big picture is in an other document but to make it short :
+- InstantWinnerGames can be created and linked to Places. Meaning they can only be played if you are close enough to the Place of the InstantWinnerGame.
+InstantWinnerGames have a start/endDate : they cannot be playout outside this time range. InstantWinnerGames have also a Won status (true/false)
+
+- Players can request for InstantWinnerGames they can play, based on their GPS and time (server time)
+
+- A player can only play once to an InstantWinnerGame (we provide a fingerpring, outside of this project). Everytime a player plays to an InstantWinnerGame, we create a InstantWinnerPlayer instance, for stats purposes.
+
+- The player who wons is the one that plays the first after InstantWinnerGames.playTime. You can see details below
+
+
+# Install
+
+go get .. whatever will be requested
+
 go build -o service-api
+
 ./service-api
+
 
 # Need to be done
 Switch to mysql
