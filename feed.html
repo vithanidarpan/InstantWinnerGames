@@ -1,0 +1,89 @@
+<html>
+<script>
+    const url="http://127.0.0.1:8080/"
+    let listUsers = [{
+        "Name": "Mike2",
+        "Email": "mmerlange@yahoo.com",
+        "Password": "password"
+    }]
+
+    let listPlaces = [{
+        "Name": "Place1",
+        "Address": "11 avenue Sauvaget",
+        "ZipCode": "44000",
+        "City": "Nantes",
+        "Code": "city1",
+        "Mail":"mmerlange@yahoo.com",
+        "Latitude":11.10,
+        "Longitude":22.3,
+        "MaxDistance":100.1
+    }]
+
+    let listGifts = [{
+        "Name": "SuperGift1",
+        "CampaignID": 1,
+        "Description": "Un super cadeau",
+        "PictureID": 1,
+    }]
+
+    let IWG = [{
+        "Name": "IWG4",
+        "PlayTime":"2020-11-20T17:47:30+01:00",
+        "StartDate":"2020-11-10T17:47:30+01:00",
+        "EndDate":"2020-11-21T17:47:30+01:00",
+        "GiftID":1,
+        "PlaceID":1,
+        "CampaignID": 1,
+        "Description": "Un super jeu",
+    }]
+
+    let IWGP = [{
+        "InstantWinnerGameID": 1,
+        "IPAddress":"127.0.0.1",
+        "Fingerprint":"it'sfingerprint",
+        "Email":"",
+        "Time":"2020-11-02T17:47:30.234713+01:00",
+    }]
+
+function reqListener () {
+  console.log(this.responseText);
+}
+
+var oReq = new XMLHttpRequest();
+oReq.onload = reqListener;
+var data = new FormData();
+/*
+data.append("body", JSON.stringify(listUsers[0]));
+oReq.open("POST", url+"api/users", true);
+oReq.send(JSON.stringify(listUsers[0]));
+
+
+data.append("body", JSON.stringify(listPlaces[0]));
+oReq.open("POST", url+"api/places", true);
+oReq.send(JSON.stringify(listPlaces[0]));
+
+oReq.open("POST", url+"api/gifts", true);
+oReq.send(JSON.stringify(listGifts[0]));
+*/
+oReq.open("POST", url+"api/instantWinnerGames", true);
+oReq.send(JSON.stringify(IWG[0]));
+
+
+/* oReq.open("POST", url+"api/instantWinnerPlayers", true);
+oReq.send(JSON.stringify(IWGP[0])); */
+console.log("init done")
+
+</script>
+
+</html>
+
+ID                  uint64
+CreatedAt           time.Time
+UpdatedAt           time.Time
+InstantWinnerGameID uint64 `binding:"required"`
+InstantWinnerGame   *InstantWinnerGame
+IPAddress           string
+Fingerprint         string `binding:"required"`
+Email               string
+Time                *time.Time `binding:"required"`
+Result              bool
