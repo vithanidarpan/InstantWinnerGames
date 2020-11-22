@@ -1,0 +1,25 @@
+version: "3.4"
+
+services:
+  db:
+    image: mysql:8.0.0
+    volumes:
+      - my_db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD: "secret"
+      - MYSQL_USER: "user"
+      - MYSQL_DATABASE: "database_name"
+  app:
+    # Configuration for building the docker image for the service
+    build:
+      context: . # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    depends_on:
+      - db # This service depends on db. Start that first.
+
+  volumes:
+    my_db:

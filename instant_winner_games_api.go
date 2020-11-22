@@ -1,24 +1,26 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"fmt"
-	"time"
 	"net/http"
-	"errors"
 	"strconv"
+	"time"
 )
-
-
 
 func InitInstantWinnerGamesApi(router *gin.Engine, db *gorm.DB) {
 	router.GET("/api/instantWinnerGames", ListInstantWinnerGames)
+
+	//unnecessary endpoint
 	router.GET("/api/openedInstantWinnerGames/:lat/:lon", GetListOfOpenedInstantGames)
+
 	router.GET("/api/instantWinnerGames/:id", ReadInstantWinnerGame)
 	router.POST("/api/instantWinnerGames", CreateInstantWinnerGame)
 	router.PUT("/api/instantWinnerGames/:id", UpdateInstantWinnerGame)
 	router.DELETE("/api/instantWinnerGames/:id", DeleteInstantWinnerGame)
+	router.GET("/api/GetListOfOpenedInstantGames", OpenedInstantGames)
 }
 func ListInstantWinnerGames(context *gin.Context) {
 	var instantWinnerGames []InstantWinnerGame
@@ -26,10 +28,11 @@ func ListInstantWinnerGames(context *gin.Context) {
 }
 
 type InstWinGamesQuery struct {
-	longitude  float32
-	latitude   float32
+	Longitude  float32 `form:"longitude" json:"longitude"`
+	Latitude   float32 `form:"latitude" json:"latitude"`
 }
 
+//unnecessary block
 func GetListOfOpenedInstantGames(context *gin.Context) {
 	//var instantWinnerGames []InstantWinnerGame
 	var opened []InstantWinnerGame
@@ -112,6 +115,29 @@ func GetListOfOpenedInstantGames(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, opened)
+}
+
+func OpenedInstantGames(context *gin.Context) {
+	var instantWinnerGames []InstantWinnerGame
+	var input InstWinGamesQuery
+	var err error
+
+	var serverTime = time.Now().Format("2006-01-02 15:04:05")
+
+	if err = context.Bind(&input); err != nil {
+		context.AbortWithStatus(http.StatusBadRequest)
+	}
+
+	err = AppDb.Joins("JOIN places on places.id=instant_winner_games.place_id").
+		Where("won = ? AND start_date < ? AND end_Date > ? AND places.latitude BETWEEN ? AND ? AND places.longitude BETWEEN ? AND ?", false, serverTime, serverTime, input.Latitude - 0.1, input.Latitude + 0.1, input.Longitude - 0.1, input.Longitude + 0.1 ).
+		Preload("Place").Find(&instantWinnerGames).Error
+
+	if err != nil {
+		context.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	context.JSON(http.StatusOK, instantWinnerGames)
 }
 
 func ReadInstantWinnerGame(context *gin.Context) {

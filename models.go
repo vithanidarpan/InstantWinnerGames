@@ -61,13 +61,13 @@ type InstantWinnerGame struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	Name        string     `binding:"required"`
-	PlayTime    *time.Time `binding:"required"` //in seconds
+	PlayTime    *time.Time `binding:"required" json:"-"` //in seconds, - will hide PlayTime in response
 	StartDate   *time.Time `binding:"required"`
 	EndDate     *time.Time `binding:"required"`
 	GiftID      uint64     `binding:"required"`
 	CampaignID  uint64     `binding:"required"`
 	PlaceID     uint64     `binding:"required"`
-	Place       *Place
+	Place       Place
 	Description string
 	Won         bool
 }
