@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitUsersApi(router *gin.Engine, db *gorm.DB) {
+func InitUsersApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/users", ListUsers)
 	router.GET("/api/users/:id", ReadUser)
 	router.POST("/api/users", CreateUser)

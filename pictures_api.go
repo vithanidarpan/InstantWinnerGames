@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitPicturesApi(router *gin.Engine, db *gorm.DB) {
+func InitPicturesApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/pictures", ListPictures)
 	router.GET("/api/pictures/:id", ReadPicture)
 	router.POST("/api/pictures", CreatePicture)

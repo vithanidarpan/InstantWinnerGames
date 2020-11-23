@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitApp(router *gin.Engine) bool {
+func InitApp(router *gin.RouterGroup) bool {
 	db, ok := InitDb()
 	if !ok {
 		fmt.Println("Error Init Database: ")

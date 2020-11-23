@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func InitInstantWinnerGamesApi(router *gin.Engine, db *gorm.DB) {
+func InitInstantWinnerGamesApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/instantWinnerGames", ListInstantWinnerGames)
 
 	//unnecessary endpoint

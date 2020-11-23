@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitRandomDrawPlayersApi(router *gin.Engine, db *gorm.DB) {
+func InitRandomDrawPlayersApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/randomDrawPlayers", ListRandomDrawPlayers)
 	router.GET("/api/randomDrawPlayers/:id", ReadRandomDrawPlayer)
 	router.POST("/api/randomDrawPlayers", CreateRandomDrawPlayer)

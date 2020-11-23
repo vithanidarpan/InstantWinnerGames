@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitGiftsApi(router *gin.Engine, db *gorm.DB) {
+func InitGiftsApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/gifts", ListGifts)
 	router.GET("/api/gifts/:id", ReadGift)
 	router.POST("/api/gifts", CreateGift)

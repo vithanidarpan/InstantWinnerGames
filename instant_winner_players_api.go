@@ -17,7 +17,7 @@ const ALREADY_PLAYED = 4
 const WON_GAME = 5
 const LOST_GAME = 6
 
-func InitInstantWinnerPlayersApi(router *gin.Engine, db *gorm.DB) {
+func InitInstantWinnerPlayersApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/instantWinnerPlayers", ListInstantWinnerPlayers)
 	router.GET("/api/getListOfInstantWinnerPlayers", GetListOfInstantWinnerPlayers)
 	router.GET("/api/instantWinnerPlayers/:id", ReadInstantWinnerPlayer)
@@ -150,7 +150,7 @@ func CreateInstantWinner(context *gin.Context) {
 	}
 
 	now := time.Now()
-	if (now.After(*game.EndDate)) {
+	if now.After(*game.EndDate) {
 		context.AbortWithStatusJSON(http.StatusOK, gin.H{"result" : false, "code": GAME_OVER, "message" : "Game is over"})
 		return
 	}
