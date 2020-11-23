@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitCampaignsApi(router *gin.Engine, db *gorm.DB) {
+func InitCampaignsApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/campaigns", ListCampaigns)
 	router.GET("/api/campaigns/:id", ReadCampaign)
 	router.POST("/api/campaigns", CreateCampaign)
