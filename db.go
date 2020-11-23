@@ -2,18 +2,24 @@ package main
 
 import (
 	"fmt"
-
-	"gorm.io/driver/sqlite"
-	//"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 )
 
 var AppDb *gorm.DB = nil
 
 func InitDb() (*gorm.DB, bool) {
+	dbUsername := os.Getenv("MYSQL_ROOT_USER")
+	dbPassword := os.Getenv("MYSQL_ROOT_PASSWORD")
+	dbHost := os.Getenv("MYSQL_HOST")
+	dbPort := os.Getenv("MYSQL_PORT")
+	dbName := os.Getenv("MYSQL_DATABASE_NAME")
+
 	var err error
-	dbName := "/Users/michaelmerlange/Downloads/sqlite-tools-osx-x86-3330000/gifts_winner.db"
-	AppDb, err = gorm.Open(sqlite.Open(dbName), &gorm.Config{})
+
+	dsn := dbUsername + ":" + dbPassword + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?parseTime=true&&loc=Local"
+	AppDb, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	//dsn := "user=isystech password=itsmeilhem dbname=gifts_winner port=5432 sslmode=disable TimeZone=Asia/Jerusalem"
 	//AppDb, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	AppDb.LogMode(true)

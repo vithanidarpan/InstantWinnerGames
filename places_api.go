@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitPlacesApi(router *gin.Engine, db *gorm.DB) {
+func InitPlacesApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/places", ListPlaces)
 	router.GET("/api/places/:id", ReadPlace)
 	router.POST("/api/places", CreatePlace)

@@ -1,23 +1,33 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
 )
 
 func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"*"},
-        AllowMethods:     []string{"PUT", "PATCH","POST","GET"},
-        AllowHeaders:     []string{"Origin"},
-        ExposeHeaders:    []string{"Content-Length"},
-        AllowCredentials: true,
-        AllowOriginFunc: func(origin string) bool {
-            return origin == "*"
-        },
-    }))
-	ok := InitApp(router)
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "*"
+		},
+	}))
+
+	authorized := router.Group("/", func(c *gin.Context) {
+		token := c.DefaultQuery("token", "")
+		if token == "" || token != os.Getenv("AUTH_TOKEN") {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error":"please provide valid token"})
+		}
+	})
+
+	ok := InitApp(authorized)
 	if !ok {
 		println("Unable to Initialize Application")
 		return

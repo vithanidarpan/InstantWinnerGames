@@ -11,20 +11,20 @@ type User struct {
 	ID        uint64
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name      string `binding:"required"`
-	Email     string `binding:"required"`
-	Password  string
+	Name      string `gorm:"type:varchar(100)" binding:"required"`
+	Email     string `gorm:"type:varchar(100)" binding:"required"`
+	Password  string `gorm:"type:varchar(100)"`
 }
 type Place struct {
 	ID          uint64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Name        string `binding:"required"`
-	Address     string `binding:"required"`
-	ZipCode     string `binding:"required"`
-	City      	string `binding:"required"`
-	Code        string
-	Mail        string
+	Name        string  `gorm:"type:varchar(100)" binding:"required"`
+	Address     string  `binding:"required"`
+	ZipCode     string  `gorm:"type:varchar(10)" binding:"required"`
+	City        string  `gorm:"type:varchar(100)" binding:"required"`
+	Code        string  `gorm:"type:varchar(100)"`
+	Mail        string  `gorm:"type:varchar(100)"`
 	Latitude    float32 `binding:"required"`
 	Longitude   float32 `binding:"required"`
 	MaxDistance float32 `binding:"required"`
@@ -33,7 +33,7 @@ type Picture struct {
 	ID        uint64
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name      string `binding:"required"`
+	Name      string `gorm:"type:varchar(100)" binding:"required"`
 	MimeType  string `binding:"required"`
 	Data      []byte `binding:"required"`
 }
@@ -43,7 +43,7 @@ type Campaign struct {
 	UpdatedAt   time.Time
 	StartDate   *time.Time `binding:"required"`
 	EndDate     *time.Time `binding:"required"`
-	Name        string     `binding:"required"`
+	Name        string     `gorm:"type:varchar(100)" binding:"required"`
 	Description string
 	PictureID   uint64
 }
@@ -51,23 +51,24 @@ type Gift struct {
 	ID          uint64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Name        string `binding:"required"`
+	Name        string `gorm:"type:varchar(100)" binding:"required"`
 	CampaignID  uint64 `binding:"required"`
 	PictureID   uint64
+	Picture     Picture
 	Description string
 }
 type InstantWinnerGame struct {
 	ID          uint64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Name        string     `binding:"required"`
-	PlayTime    *time.Time `binding:"required"` //in seconds
+	Name        string     `gorm:"type:varchar(100)" binding:"required"`
+	PlayTime    *time.Time `binding:"required" json:"-"` //in seconds, - will hide PlayTime in response
 	StartDate   *time.Time `binding:"required"`
 	EndDate     *time.Time `binding:"required"`
 	GiftID      uint64     `binding:"required"`
 	CampaignID  uint64     `binding:"required"`
 	PlaceID     uint64     `binding:"required"`
-	Place       *Place
+	Place       Place
 	Description string
 	Won         bool
 }
@@ -76,7 +77,7 @@ type RandomDrawGame struct {
 	ID          uint64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Name        string `binding:"required"`
+	Name        string `gorm:"type:varchar(100)" binding:"required"`
 	Description string
 	GiftID      uint64     `binding:"required"`
 	StartDate   *time.Time `binding:"required"`
@@ -88,9 +89,9 @@ type InstantWinnerPlayer struct {
 	UpdatedAt           time.Time
 	InstantWinnerGameID uint64 `binding:"required"`
 	InstantWinnerGame   *InstantWinnerGame
-	IPAddress           string
-	Fingerprint         string `binding:"required"`
-	Email               string
+	IPAddress           string     `gorm:"type:varchar(100)"`
+	Fingerprint         string     `binding:"required"`
+	Email               string     `gorm:"type:varchar(100)"`
 	Time                *time.Time `binding:"required"`
 	Result              bool
 }
@@ -99,13 +100,13 @@ type RandomDrawPlayer struct {
 	RandomDrawGameID uint64 `binding:"required"`
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
-	IPAddress        string
-	Email            string     `binding:"required"`
+	IPAddress        string     `gorm:"type:varchar(100)"`
+	Email            string     `gorm:"type:varchar(100)" binding:"required"`
 	Time             *time.Time `binding:"required"`
 	Won              bool
 }
 
-func InitModels(router *gin.Engine, db *gorm.DB) {
+func InitModels(router *gin.RouterGroup, db *gorm.DB) {
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Place{})
 	db.AutoMigrate(&Picture{})
