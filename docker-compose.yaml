@@ -8,16 +8,24 @@ services:
     ports:
       - "3306:3306"
     environment:
-        MYSQL_ROOT_PASSWORD: mysql_password
-        MYSQL_USER: mysql_user
-        MYSQL_DATABASE: mysql_db_name
+      MYSQL_ROOT_PASSWORD: db_password    # Should be replaced with intended root user password
+      MYSQL_DATABASE: db_name             # Should be replaced with intended database name
+
   app:
     # Configuration for building the docker image for the service
     build:
       context: . # Use an image built from the specified dockerfile in the current directory.
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    environment:
+      MYSQL_USER: root                    # Should be replaced with database user 
+      MYSQL_PASSWORD: db_password         # Should be replaced with database user password
+      MYSQL_DATABASE: db_name             # Should be replaced with database name
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      AUTH_TOKEN: app_auth_token          # Replace with intended auth token
     depends_on:
       - db # This service depends on db. Start that first.
 
