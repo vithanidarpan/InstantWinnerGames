@@ -2,21 +2,22 @@
 <script>
     const url="http://127.0.0.1:8080/"
     let listUsers = [{
-        "Name": "Mike2",
-        "Email": "mmerlange@yahoo.com",
-        "Password": "password"
+        "Name": "Mike1",
+        "Email": "mmerlange@gmail.com",
+        "Password": "password",
     }]
 
     let listPlaces = [{
-        "Name": "Place1",
+        "Name": "Place2",
         "Address": "11 avenue Sauvaget",
         "ZipCode": "44000",
         "City": "Nantes",
         "Code": "city1",
         "Mail":"mmerlange@yahoo.com",
-        "Latitude":11.10,
+        "Latitude":12.30,
         "Longitude":22.3,
-        "MaxDistance":100.1
+        "MaxDistance":100.1,
+        "token":"app_auth_token"
     }]
 
     let listGifts = [{
@@ -24,6 +25,7 @@
         "CampaignID": 1,
         "Description": "Un super cadeau",
         "PictureID": 1,
+        "token":"app_auth_token"
     }]
 
     let IWG = [{
@@ -35,6 +37,7 @@
         "PlaceID":1,
         "CampaignID": 1,
         "Description": "Un super jeu",
+        "token":"app_auth_token"
     }]
 
     let IWGP = [{
@@ -43,6 +46,7 @@
         "Fingerprint":"it'sfingerprint",
         "Email":"",
         "Time":"2020-11-02T17:47:30.234713+01:00",
+        "token":"app_auth_token"
     }]
 
 function reqListener () {
@@ -52,25 +56,36 @@ function reqListener () {
 var oReq = new XMLHttpRequest();
 oReq.onload = reqListener;
 var data = new FormData();
-/*
-data.append("body", JSON.stringify(listUsers[0]));
-oReq.open("POST", url+"api/users", true);
-oReq.send(JSON.stringify(listUsers[0]));
+
+listUsers.forEach(u=>{
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("POST", url+"api/users?token=app_auth_token", true);
+    oReq.send(JSON.stringify(u));
+})
+
+listPlaces.forEach(u=>{
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("POST", url+"api/places?token=app_auth_token", true);
+    oReq.send(JSON.stringify(u));
+})
+
+listGifts.forEach(u=>{
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("POST", url+"api/gifts?gifts=app_auth_token", true);
+    oReq.send(JSON.stringify(u));
+})
+
+IWG.forEach(u=>{
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("POST", url+"api/instantWinnerGames?token=app_auth_token", true);
+    oReq.send(JSON.stringify(u));
+})
 
 
-data.append("body", JSON.stringify(listPlaces[0]));
-oReq.open("POST", url+"api/places", true);
-oReq.send(JSON.stringify(listPlaces[0]));
-
-oReq.open("POST", url+"api/gifts", true);
-oReq.send(JSON.stringify(listGifts[0]));
-*/
-oReq.open("POST", url+"api/instantWinnerGames", true);
-oReq.send(JSON.stringify(IWG[0]));
-
-
-/* oReq.open("POST", url+"api/instantWinnerPlayers", true);
-oReq.send(JSON.stringify(IWGP[0])); */
 console.log("init done")
 
 </script>
