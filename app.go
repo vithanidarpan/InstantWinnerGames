@@ -6,22 +6,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitApp(router *gin.RouterGroup) bool {
+func InitApp(unAuthorized *gin.RouterGroup, authorized *gin.RouterGroup) bool {
 	db, ok := InitDb()
 	if !ok {
 		fmt.Println("Error Init Database: ")
 		return false
 	}
-	InitModels(router, db)
-	InitUsersApi(router, db)
-	InitPlacesApi(router, db)
-	InitPicturesApi(router, db)
-	InitCampaignsApi(router, db)
-	InitGiftsApi(router, db)
-	InitInstantWinnerGamesApi(router, db)
-	InitRandomDrawGamesApi(router, db)
-	InitInstantWinnerPlayersApi(router, db)
-	InitRandomDrawPlayersApi(router, db)
+	InitModels(unAuthorized, db)
+	InitUsersApi(unAuthorized, db)
+	InitPlacesApi(unAuthorized, db)
+	InitPicturesApi(unAuthorized, db)
+	InitCampaignsApi(unAuthorized, db)
+	InitGiftsApi(unAuthorized, db)
+
+	//Use authorized group for authentication
+	InitInstantWinnerGamesApi(authorized, db)
+
+	InitRandomDrawGamesApi(unAuthorized, db)
+	InitInstantWinnerPlayersApi(unAuthorized, db)
+	InitRandomDrawPlayersApi(unAuthorized, db)
 
 	return true
 }
