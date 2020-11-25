@@ -20,14 +20,16 @@ func main() {
 		},
 	}))
 
+	unAuthorized := router.Group("/")
+
 	authorized := router.Group("/", func(c *gin.Context) {
 		token := c.DefaultQuery("token", "")
 		if token == "" || token != os.Getenv("AUTH_TOKEN") {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error":"please provide valid token"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "please provide valid token"})
 		}
 	})
 
-	ok := InitApp(authorized)
+	ok := InitApp(unAuthorized, authorized)
 	if !ok {
 		println("Unable to Initialize Application")
 		return
