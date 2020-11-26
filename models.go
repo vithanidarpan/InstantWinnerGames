@@ -9,8 +9,8 @@ import (
 
 type User struct {
 	ID        uint64
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt *time.Time
+	UpdatedAt *time.Time
 	Name      string `gorm:"type:varchar(100)" binding:"required"`
 	Email     string `gorm:"type:varchar(100)" binding:"required"`
 	Password  string `gorm:"type:varchar(100)"`
