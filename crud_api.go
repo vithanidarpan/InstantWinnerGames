@@ -15,6 +15,11 @@ func ListModels(context *gin.Context, models interface{}) {
 	AppDb.Find(models)
 	context.JSON(http.StatusOK, models)
 }
+
+func FetchListModels(models interface{}) {
+	AppDb.Find(models)
+}
+
 func ListModelsWith(context *gin.Context, models interface{}, preloads []string) {
 	var result *gorm.DB = nil
 	for _, preload := range preloads {
@@ -81,6 +86,15 @@ func CreateModel(context *gin.Context, model interface{}) {
 	context.JSON(http.StatusOK, model)
 }
 
+func FetchCreateModel(model interface{}) error {
+	var err error
+	if AppDb.Create(model) == nil {
+		return err
+	}
+
+	return nil
+}
+
 func UpdateModel(context *gin.Context, model interface{},
 	idSetter ModelIdSetter) {
 	var id uint64
@@ -98,6 +112,15 @@ func UpdateModel(context *gin.Context, model interface{},
 		return
 	}
 	context.JSON(http.StatusOK, model)
+}
+func FetchUpdateModel(model interface{}, id uint64, idSetter ModelIdSetter) error {
+	var err error
+	idSetter(id, model)
+	if AppDb.Save(model) == nil {
+		return err
+	}
+
+	return nil
 }
 func DeleteModel(context *gin.Context, model interface{}) {
 	var id uint64

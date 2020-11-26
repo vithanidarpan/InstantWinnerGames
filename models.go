@@ -62,13 +62,13 @@ type InstantWinnerGame struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	Name        string     `gorm:"type:varchar(100)" binding:"required"`
-	PlayTime    *time.Time `binding:"required" json:"-"` //in seconds, - will hide PlayTime in response
+	PlayTime    *time.Time `binding:"required" json:",omitempty"` //in seconds
 	StartDate   *time.Time `binding:"required"`
 	EndDate     *time.Time `binding:"required"`
 	GiftID      uint64     `binding:"required"`
 	CampaignID  uint64     `binding:"required"`
 	PlaceID     uint64     `binding:"required"`
-	Place       Place
+	Place       *Place
 	Description string
 	Won         bool
 }

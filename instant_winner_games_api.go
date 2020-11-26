@@ -1,12 +1,9 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -23,14 +20,17 @@ func InitInstantWinnerGamesApiPublic(router *gin.RouterGroup, db *gorm.DB) {
 
 func ListInstantWinnerGames(context *gin.Context) {
 	var instantWinnerGames []InstantWinnerGame
-	ListModels(context, &instantWinnerGames)
+	FetchListModels(&instantWinnerGames)
+	for i, _ := range instantWinnerGames {
+		instantWinnerGames[i].PlayTime = nil
+	}
+	context.JSON(http.StatusOK, instantWinnerGames)
 }
 
 type InstWinGamesQuery struct {
-	Longitude  float32 `form:"longitude" json:"longitude"`
-	Latitude   float32 `form:"latitude" json:"latitude"`
+	Longitude float32 `form:"longitude" json:"longitude"`
+	Latitude  float32 `form:"latitude" json:"latitude"`
 }
-
 
 func OpenedInstantGames(context *gin.Context) {
 	var instantWinnerGames []InstantWinnerGame
@@ -44,12 +44,16 @@ func OpenedInstantGames(context *gin.Context) {
 	}
 
 	err = AppDb.Joins("JOIN places on places.id=instant_winner_games.place_id").
-		Where("won = ? AND start_date < ? AND end_Date > ? AND places.latitude BETWEEN ? AND ? AND places.longitude BETWEEN ? AND ?", false, serverTime, serverTime, input.Latitude - 0.1, input.Latitude + 0.1, input.Longitude - 0.1, input.Longitude + 0.1 ).
-		Preload("Place").Find(&instantWinnerGames).Error
+		Where("won = ? AND start_date < ? AND end_Date > ? AND places.latitude BETWEEN ? AND ? AND places.longitude BETWEEN ? AND ?",
+			false, serverTime, serverTime, input.Latitude-0.1, input.Latitude+0.1, input.Longitude-0.1, input.Longitude+0.1).Find(&instantWinnerGames).Error
 
 	if err != nil {
 		context.AbortWithStatus(http.StatusInternalServerError)
 		return
+	}
+
+	for i, _ := range instantWinnerGames {
+		instantWinnerGames[i].PlayTime = nil
 	}
 
 	context.JSON(http.StatusOK, instantWinnerGames)
@@ -61,12 +65,39 @@ func ReadInstantWinnerGame(context *gin.Context) {
 }
 func CreateInstantWinnerGame(context *gin.Context) {
 	var instantWinnerGame InstantWinnerGame
-	CreateModel(context, &instantWinnerGame)
+	if err := context.ShouldBindJSON(&instantWinnerGame); err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	err := FetchCreateModel(&instantWinnerGame)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, &instantWinnerGame)
 }
+
 func UpdateInstantWinnerGame(context *gin.Context) {
 	var instantWinnerGame InstantWinnerGame
-	UpdateModel(context, &instantWinnerGame, setInstantWinnerGameId)
+	var id uint64
+	var ok bool
+	if id, ok = GetIDOrError(context); !ok {
+		return
+	}
+	if err := context.BindJSON(&instantWinnerGame); err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := FetchUpdateModel(&instantWinnerGame, id, setInstantWinnerGameId)
+
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, &instantWinnerGame)
 }
+
 func DeleteInstantWinnerGame(context *gin.Context) {
 	DeleteModel(context, &InstantWinnerGame{})
 }
