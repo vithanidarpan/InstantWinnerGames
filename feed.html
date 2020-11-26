@@ -37,7 +37,6 @@
         "PlaceID":1,
         "CampaignID": 1,
         "Description": "Un super jeu",
-        "token":"app_auth_token"
     }]
 
     let IWGP = [{
@@ -60,6 +59,13 @@ var data = new FormData();
 listUsers.forEach(u=>{
     var oReq = new XMLHttpRequest();
     oReq.onload = reqListener;
+    oReq.open("PUT", url+"api/users/1?token=app_auth_token", true);
+    oReq.send(JSON.stringify(u));
+})
+
+/* listUsers.forEach(u=>{
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
     oReq.open("POST", url+"api/users?token=app_auth_token", true);
     oReq.send(JSON.stringify(u));
 })
@@ -74,7 +80,7 @@ listPlaces.forEach(u=>{
 listGifts.forEach(u=>{
     var oReq = new XMLHttpRequest();
     oReq.onload = reqListener;
-    oReq.open("POST", url+"api/gifts?gifts=app_auth_token", true);
+    oReq.open("POST", url+"api/gifts?token=app_auth_token", true);
     oReq.send(JSON.stringify(u));
 })
 
@@ -83,7 +89,7 @@ IWG.forEach(u=>{
     oReq.onload = reqListener;
     oReq.open("POST", url+"api/instantWinnerGames?token=app_auth_token", true);
     oReq.send(JSON.stringify(u));
-})
+}) */
 
 
 console.log("init done")

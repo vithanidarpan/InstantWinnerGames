@@ -20,7 +20,7 @@ func InitDb() (*gorm.DB, bool) {
 
 	dsn := dbUsername + ":" + dbPassword + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?parseTime=true&&loc=Local"
 	AppDb, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
+	fmt.Println("inplace")
 	if err != nil {
 		fmt.Println("InitDb(): Unable to Connect to Database: error=%v", err)
 		return nil, false
