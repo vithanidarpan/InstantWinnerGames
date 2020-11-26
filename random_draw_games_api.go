@@ -8,7 +8,7 @@ import (
 func InitRandomDrawGamesApi(router *gin.RouterGroup, db *gorm.DB) {
 	router.GET("/api/randomDrawGames", ListRandomDrawGames)
 	router.GET("/api/randomDrawGames/:id", ReadRandomDrawGame)
-	router.POST("/api/randomDrawGrams", CreateRandomDrawGame)
+	router.POST("/api/randomDrawGames", CreateRandomDrawGame)
 	router.PUT("/api/randomDrawGames/:id", UpdateRandomDrawGame)
 	router.DELETE("/api/randomDrawGames/:id", DeleteRandomDrawGame)
 }

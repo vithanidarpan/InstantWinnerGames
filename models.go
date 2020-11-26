@@ -54,7 +54,7 @@ type Gift struct {
 	Name        string `gorm:"type:varchar(100)" binding:"required"`
 	CampaignID  uint64 `binding:"required"`
 	PictureID   uint64
-	Picture     Picture
+	Picture     *Picture
 	Description string
 }
 type InstantWinnerGame struct {
